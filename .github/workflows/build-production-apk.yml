@@ -1,0 +1,14 @@
+name: Build Production APK Trigger
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  build:
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/build production' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo A comment on PR $NUMBER
+        env:
+          NUMBER: ${{ github.event.issue.number }}
