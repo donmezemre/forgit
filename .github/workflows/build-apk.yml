@@ -1,0 +1,20 @@
+name: APK Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_num:
+        description: 'Pull Request Number'
+        required: true
+      flavor:
+        description: 'Flavor'
+        required: true
+      name:
+        description: 'Flavor Name'
+        required: true
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    name: Build ${{ github.event.inputs.flavor }} ${{ github.event.inputs.name }} ${{ github.event.inputs.pr_num }}
+    steps:
+      - run: echo "emre"
