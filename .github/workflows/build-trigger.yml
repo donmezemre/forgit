@@ -1,6 +1,8 @@
 name: Build Trigger
 
-on: issue_comment
+on:
+  issue_comment:
+    types: [created]
 
 jobs:
   build:
@@ -39,5 +41,5 @@ jobs:
             pullrequest_ref = pr["data"]["head"]["ref"]
             await github.request('POST /repos/donmezemre/forgit/actions/workflows/build-apk.yml/dispatches', {
               ref: pullrequest_ref,
-              inputs: {pr_num: context.issue.number.toString(), name: ${{steps.setVars.outputs.name}}, flavor: ${{steps.setVars.outputs.flavor}}}
+              inputs: {pr_num: context.issue.number.toString(), flavor: production, name: productionRelease}
             })
