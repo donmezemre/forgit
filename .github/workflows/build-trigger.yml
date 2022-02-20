@@ -1,0 +1,43 @@
+name: Build Trigger
+
+on: issue_comment
+
+jobs:
+  build:
+    if: github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    name: Trigger
+    env:
+      NODE_VERSION: 14.18.1
+    steps:
+      - name: Set variables
+        id: setVars
+        run: |
+          if [[ "${{github.event.comment.body}}" == "/build test" ]]; then
+              echo "::set-output name=flavor::InternalRelease"
+              echo "::set-output name=name::internal"
+          fi
+
+          if [[ "${{github.event.comment.body}}" == "/build production" ]]; then
+              echo "::set-output name=flavor::ProductionRelease"
+              echo "::set-output name=name::production"
+          fi
+
+          if [[ "${{github.event.comment.body}}" == "/build appium" ]]; then
+              echo "::set-output name=flavor::AppiumRelease"
+              echo "::set-output name=name::appium"
+          fi
+      - uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const pr = await github.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            })
+            pullrequest_ref = pr["data"]["head"]["ref"]
+            await github.request('POST /repos/donmezemre/forgit/actions/workflows/build-apk.yml/dispatches', {
+              ref: pullrequest_ref,
+              inputs: {pr_num: context.issue.number.toString(), name: ${{steps.setVars.outputs.name}}, flavor: ${{steps.setVars.outputs.flavor}}}
+            })
