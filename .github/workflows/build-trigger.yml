@@ -41,5 +41,5 @@ jobs:
             pullrequest_ref = pr["data"]["head"]["ref"]
             await github.request('POST /repos/donmezemre/forgit/actions/workflows/build-apk.yml/dispatches', {
               ref: pullrequest_ref,
-              inputs: {pr_num: context.issue.number.toString(), flavor: production, name: productionRelease}
+              inputs: {pr_num: context.issue.number.toString(), flavor: "production", name: "productionRelease"}
             })
