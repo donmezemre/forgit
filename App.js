@@ -15,7 +15,7 @@ const App = () => {
   const env = Config.ENVIRONMENT;
   return (
     <View>
-      <Text style={{fontSize: 30}}>{env}</Text>
+      <Text>{env}</Text>
     </View>
   );
 };
